@@ -1,0 +1,19 @@
+name: Daily Vercel Build
+
+# 触发条件：定时触发 或 手动触发
+on:
+  schedule:
+    # 这里的 cron 表达式使用的是 UTC 时间。
+    # 比如你想在曼谷时间 (UTC+7) 的凌晨 3 点更新，那么对应的 UTC 时间就是前一天晚上的 20 点。
+    # 下面的写法代表：每天 UTC 时间 20:00 (曼谷时间 03:00 / 北京时间 04:00) 自动执行一次
+    - cron: '0 20 * * *'
+  # 允许在 GitHub 网页上手动点击运行
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Vercel Deploy Hook
+        # 使用 curl 命令向 Vercel 发送请求，触发构建
+        run: curl -X POST "${{ secrets.VERCEL_DEPLOY_HOOK }}"
